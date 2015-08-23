@@ -1,6 +1,6 @@
 # totalisator
 
-FIXME
+Simple totalisator webapp for basketball events
 
 ## Prerequisites
 

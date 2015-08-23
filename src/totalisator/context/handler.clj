@@ -17,6 +17,7 @@
 (defn wrap-json-keys [handler]
   (fn [request]
     (let [response (handler request)]
+      (println (:body response))
       (update response :body (partial transform-keys ->camelCaseKeyword)))))
 
 (def app

@@ -1,0 +1,1 @@
+DROP TABLE "winner_bets";

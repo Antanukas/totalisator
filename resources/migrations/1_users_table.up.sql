@@ -4,5 +4,3 @@ CREATE TABLE "users" (
 
 	CONSTRAINT USER_UNQ UNIQUE (name)
 );
-
-INSERT INTO "users" VALUES(1, 'Antanas');

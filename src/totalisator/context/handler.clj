@@ -7,7 +7,7 @@
             [totalisator.controllers.routes :as routes]))
 
 (defn wrap-user-id-body-path
-  [handler & [{:keys [user-id-key-name] :or {user-id-key-name :user-id}}]]
+  [handler & [{:keys [user-id-key-name] :or {user-id-key-name :current-user-id}}]]
   (fn [request]
     (handler
       (if-let [user-id (get-in request [:params user-id-key-name])]

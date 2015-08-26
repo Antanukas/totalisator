@@ -1,1 +1,61 @@
-<h1>This is homepage</h1>
+<html ng-app="totalisatorApp" ng-controller="IndexController">
+<head>
+    <link rel="stylesheet" href="webjars/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="webjars/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+</head>
+<body>
+
+
+<nav class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Totalisator</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right">
+                <div class="form-group">
+                    <input placeholder="Username" class="form-control" type="text" ng-model="username">
+                </div>
+                <div class="form-group">
+                    <input placeholder="Password" class="form-control" type="password">
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+        </div>
+        <!--/.navbar-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+    <div data-ng-view></div>
+    <div class="container">
+        <footer>
+            <p>© Tieto 2015</p>
+        </footer>
+    </div>
+    <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="webjars/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="webjars/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="webjars/angularjs/1.4.3-1/angular.min.js"></script>
+    <script src="webjars/angularjs/1.4.3-1/angular-route.min.js"></script>
+
+
+    <script src="js/controllers.js"></script>
+    <script src="js/module.js"></script>
+</div>
+</body>
+</html>

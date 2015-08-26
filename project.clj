@@ -8,7 +8,12 @@
                  [com.h2database/h2 "1.4.188"]
                  [ragtime "0.5.1"]
                  [yesql "0.5.0"]
-                 [camel-snake-kebab "0.3.2"]]
+                 [camel-snake-kebab "0.3.2"]
+
+                 ;Frontend deps
+                 [org.webjars/angularjs "1.4.3-1"]
+                 [org.webjars/bootstrap "3.3.5"]
+                 [org.webjars/jquery "1.11.3"]]
   :plugins [[lein-ring "0.9.6"]]
   :ring {:handler totalisator.context.handler/app}
   :profiles

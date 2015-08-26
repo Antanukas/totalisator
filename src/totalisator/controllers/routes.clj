@@ -12,6 +12,8 @@
   (resp/response (->> requests (map #(cons % args)) (map #(apply func %)))))
 
 (defroutes site-routes
+  ;routing webjars
+  (route/resources "/" {:root "META-INF/resources/"})
   (GET "/" [] (resp/redirect "/index.html"))
   (route/resources "/" {:root "public"})
   (route/not-found "Not Found"))

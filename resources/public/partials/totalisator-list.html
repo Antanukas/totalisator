@@ -1,0 +1,18 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title text-center">
+            Current totalisators
+            <div class="btn-group pull-right">
+                <a href="#/newTotalisator" class="btn btn-success">New</a>
+            </div>
+        </h4>
+        <div class="clearfix"></div>
+    </div>
+    <div class="panel-body">
+        <div class="list-group">
+            <a data-ng-repeat="totalisator in vm.totalisators" href="#" class="list-group-item">
+                {{totalisator.name}}
+            </a>
+        </div>
+    </div>
+</div>

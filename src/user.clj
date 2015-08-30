@@ -8,7 +8,6 @@
             [totalisator.service.bet-service :as bets]
             [totalisator.service.match-service :as ms]))
 
-(reset! c/db-configuration {:connection-uri "jdbc:h2:mem:test2;DB_CLOSE_DELAY=-1"})
 (defn load-config []
   {:datastore  (jdbc/sql-database @c/db-configuration)
    :migrations (jdbc/load-resources "migrations")})
@@ -21,11 +20,12 @@
 
 
 (defn init []
+  (reset! c/db-configuration {:connection-uri "jdbc:h2:mem:test2;DB_CLOSE_DELAY=-1"})
   (migrate)
 
   (let [_ (println (us/get-users))
-        antanas-id (:id (us/save-user! {:name "Antanas"}))
-        other-user-id (:id (us/save-user! {:name "OtherGuy"}))
+        antanas-id (:id (us/login! {:name "Antanas"}))
+        other-user-id (:id (us/login! {:name "OtherGuy"}))
 
         eurobasked-id (:id (ts/save-totalisator! {:current-user-id antanas-id :description nil :created-by antanas-id :name "Eurobasket" :winner-count 1}))
 

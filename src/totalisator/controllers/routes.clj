@@ -9,7 +9,21 @@
             [totalisator.service.match-service :as ms]))
 
 (defn- batch-response [requests func & args]
+  (println "AAAAA" requests)
   (resp/response (->> requests (map #(cons % args)) (map #(apply func %)))))
+
+(defn wrap-user-id-body-path
+  [handler & [{:keys [user-id-key-name] :or {user-id-key-name :current-user-id}}]]
+  (fn [request]
+    (handler
+      (if-let [user-id (get-in request [:params user-id-key-name])]
+        (let [body (:body request)
+              user-id-fn (fn [m] (assoc m :currentUserId user-id))]
+          (assoc request :body
+                         (if (seq? body)
+                           (map user-id-fn body)
+                           (user-id-fn body))))))))
+
 
 (defroutes site-routes
   ;routing webjars
@@ -21,19 +35,22 @@
 ;TODO secure routes
 (defroutes api-routes
   ;Routes that can be managed with own user only
-  (POST "/users" [:as {user :body}] (resp/response (us/save-user! user)))
-  (GET "/users" [] (resp/response (us/get-users)))
-  (POST "/users/:current-user-id/totalisators"
-        [:as {totalisators :body}] (batch-response totalisators ts/save-totalisator!))
-  (POST "/users/:current-user-id/totalisators/:totalisator-id/teams"
-        [totalisator-id :as {teams :body}] (batch-response teams tms/save-team! totalisator-id))
-  (POST "/users/:current-user-id/totalisators/:totalisator-id/teams/:team-id/bets"
-        [team-id :as {bets :body}] (batch-response bets bets/new-winner-bet team-id))
-  (POST "/users/:current-user-id/totalisators/:totalisator-id/matches"
-        [totalisator-id :as {matches :body}] (batch-response matches ms/save-match! totalisator-id))
-  (POST "/users/:current-user-id/totalisators/:totalisator-id/matches/:match-id/bets"
-        [match-id :as {bets :body}] (batch-response bets bets/new-match-bet match-id))
+  (context "/users/:current-user-id" [current-user-id]
+    (wrap-user-id-body-path
+      (routes
+        (POST "/totalisators"
+              [:as {totalisators :body}] (batch-response totalisators ts/save-totalisator!))
+        (POST "/totalisators/:totalisator-id/teams"
+              [totalisator-id :as {teams :body}] (batch-response teams tms/save-team! totalisator-id))
+        (POST "/totalisators/:totalisator-id/teams/:team-id/bets"
+              [team-id :as {bets :body}] (batch-response bets bets/new-winner-bet team-id))
+        (POST "/totalisators/:totalisator-id/matches"
+              [totalisator-id :as {matches :body}] (batch-response matches ms/save-match! totalisator-id))
+        (POST "/totalisators/:totalisator-id/matches/:match-id/bets"
+              [match-id :as {bets :body}] (batch-response bets bets/new-match-bet match-id)))))
 
+  (GET "/users" [] (resp/response (us/get-users)))
+  (POST "/users" [:as {users :body}] (batch-response users us/login!))
   (GET "/users/:current-user-id/bets"
     [current-user-id] (resp/response (bets/get-team-bets current-user-id)))
   (GET "/totalisators" [] (resp/response (ts/get-totalisators)))

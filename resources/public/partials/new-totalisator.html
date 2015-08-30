@@ -26,7 +26,7 @@
             <tags-input ng-model="vm.teamsTags" on-tag-added="vm.addTeam($tag)"></tags-input>
         </div>
     </div>
-    <div class="form-inline" ng-repeat="match in vm.totalisator.matches">
+    <div class="form-inline" ng-repeat="match in vm.matches">
         <label class="control-label col-xs-2">Team Match</label>
         <div class="dropdown dropdown-scroll pull-left">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">{{match.homeTeam || 'Home team'}}<span class="caret"></span>
@@ -40,7 +40,7 @@
                         <input type="text" class="form-control" placeholder="Query" ng-model="vm.homeQuery"/>
                     </div>
                 </li>
-                <li role="presentation" ng-repeat="team in vm.totalisator.teams | filter:homeQuery">
+                <li role="presentation" ng-repeat="team in vm.teams | filter:homeQuery">
                     <a href="" ng-click="match.homeTeam = team" ng-bind="team"></a>
                 </li>
             </ul>
@@ -58,7 +58,7 @@
                         <input type="text" class="form-control" placeholder="Query" ng-model="vm.awayQuery"/>
                     </div>
                 </li>
-                <li role="presentation" ng-repeat="team in vm.totalisator.teams | filter:awayQuery">
+                <li role="presentation" ng-repeat="team in vm.teams | filter:awayQuery">
                     <a href="" ng-click="match.awayTeam = team" ng-bind="team"></a>
                 </li>
             </ul>

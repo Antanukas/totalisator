@@ -1,7 +1,8 @@
 var totalisatorApp = angular.module('totalisatorApp', [
     "ngRoute",
     "ngTagsInput",
-    "controllers"
+    "controllers",
+    "factories"
 ]);
 
 totalisatorApp.config(['$routeProvider',

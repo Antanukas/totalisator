@@ -1,0 +1,38 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label for="name" class="control-label col-xs-2">Name</label>
+
+        <div class="col-xs-10">
+            <input type="text" class="form-control" id="name" placeholder="Name" ng-model="vm.totalisator.name">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description" class="control-label col-xs-2">Description</label>
+
+        <div class="col-xs-10">
+            <input type="text" class="form-control" id="description" placeholder="Description" ng-model="vm.totalisator.description">
+        </div>
+    </div>
+
+    <!-- Team totalistator -->
+    <div class="form-inline" ng-repeat="team in vm.totalisator.teams">
+        <label for="bet_{{$index}}" class="control-label col-xs-2">{{team.name}}</label>
+
+        <div class="col-xs-10 row">
+            <span id="bet_{{$index}}" href="" class="btn btn-primary" ng-bind="team.odds"/>
+            <input type="text" class="form-control" id="description_{{$index}}" placeholder="How much you want to bet?" ng-model="team.betAmount">
+            <button id="place_bet_{{$index}}" class="btn btn-success" ng-click="vm.placeWinnerBet()" >Place Bet</button>
+            <label for="bet_{{$index}}" class="control-label" ng-show="vm.hasMoneyInvested(team)">Money invested: {{team.moneyInvested}}$</label>
+        </div>
+    </div>
+
+    <div class="form-inline" ng-repeat="match in vm.totalisator.matches">
+        <label for="home-team" class="control-label col-xs-2">Team Match</label>
+        <input type="text" class="form-control" id="home-team" placeholder="Home Team" ng-model="match.homeTeam" disabled/>
+        <input type="text" class="form-control" id="home-team-score" placeholder="Home Team Points" ng-model="match.homeTeamScore"/>
+        <input type="text" class="form-control" id="away-team" placeholder="Away Team Points" ng-model="match.awayTeam" disabled/>
+        <input type="text" class="form-control" id="away-team-score" placeholder="Away Team Points" ng-model="match.awayTeamScore" />
+        <input type="text" class="form-control" id="bet" placeholder="How much you bet?" ng-model="match.amount"/>
+        <a href="" ng-click="vm.removeMatch($index)" class="btn btn-primary">Remove</a>
+    </div>
+</form>

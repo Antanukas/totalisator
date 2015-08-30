@@ -22,17 +22,47 @@
     </div>
     <div class="form-group">
         <label for="teams" class="control-label col-xs-2">Teams</label>
-
         <div class="col-xs-10">
-            <input type="text" class="form-control" id="teams" placeholder="Teams" ng-model="vm.totalisator.teams">
-
-            <p class="help-block">Comma separated list of teams</p>
+            <tags-input ng-model="vm.teamsTags" on-tag-added="vm.addTeam($tag)"></tags-input>
         </div>
     </div>
     <div class="form-inline" ng-repeat="match in vm.totalisator.matches">
-        <label for="home-team" class="control-label col-xs-2">Team Match</label>
-        <input type="text" class="form-control" id="home-team" placeholder="Home Team" ng-model="match.homeTeam"/>
-        <input type="text" class="form-control" id="away-team" placeholder="Away Team" ng-model="match.awayTeam"/>
+        <label class="control-label col-xs-2">Team Match</label>
+        <div class="dropdown dropdown-scroll pull-left">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">{{match.homeTeam || 'Home team'}}<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation">
+                    <div class="input-group input-group-sm search-control">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Query" ng-model="vm.homeQuery"/>
+                    </div>
+                </li>
+                <li role="presentation" ng-repeat="team in vm.totalisator.teams | filter:homeQuery">
+                    <a href="" ng-click="match.homeTeam = team" ng-bind="team"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="dropdown dropdown-scroll pull-left">
+            <button class="btn btn-default dropdown-toggle" type="button" id="awayTeamDropdown" data-toggle="dropdown">{{match.awayTeam || 'Away team'}}<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="awayTeamDropdown">
+                <li role="presentation">
+                    <div class="input-group input-group-sm search-control">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </span>
+                        <input type="text" class="form-control" placeholder="Query" ng-model="vm.awayQuery"/>
+                    </div>
+                </li>
+                <li role="presentation" ng-repeat="team in vm.totalisator.teams | filter:awayQuery">
+                    <a href="" ng-click="match.awayTeam = team" ng-bind="team"></a>
+                </li>
+            </ul>
+        </div>
         <input type="text" class="form-control" id="match-date" placeholder="Match Date ('YYYY-MM-dd HH:mm')" ng-model="match.matchDate"/>
         <a href="" ng-click="vm.removeMatch($index)" class="btn btn-primary">Remove</a>
     </div>
@@ -40,12 +70,12 @@
 
     <div class="form-group">
         <div class="col-xs-10">
-            <a href="" ng-click="vm.addNewMatch()" class="btn btn-primary">Add match</a>
+            <a href="" ng-disabled="!vm.atLeastTwoTeamsExist()" ng-click="vm.atLeastTwoTeamsExist() && vm.addNewMatch()" class="btn btn-primary">Add match</a>
         </div>
     </div>
     <div class="form-group">
         <div class="col-xs-10">
-            <button type="submit" class="btn btn-primary">Finish</button>
+            <button type="submit" class="btn btn-primary" ng-click="vm.saveTotalisator()">Finish</button>
         </div>
     </div>
 </form>

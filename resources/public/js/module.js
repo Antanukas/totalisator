@@ -1,5 +1,6 @@
 var totalisatorApp = angular.module('totalisatorApp', [
     "ngRoute",
+    "ngTagsInput",
     "controllers"
 ]);
 
@@ -8,11 +9,18 @@ totalisatorApp.config(['$routeProvider',
     $routeProvider.
       when('/totalisatorList', {
         templateUrl: 'partials/totalisator-list.html',
-        controller: 'TotalisatorsController'
+        controller: 'TotalisatorsController',
+        controllerAs: 'vm'
       }).
       when('/newTotalisator', {
         templateUrl: 'partials/new-totalisator.html',
-        controller: 'ManageTotalisatorController'
+        controller: 'CreateTotalisatorController',
+        controllerAs: 'vm'
+      }).
+      when('/viewTotalisator', {
+        templateUrl: 'partials/view-totalisator.html',
+        controller: 'ViewTotalisatorController',
+        controllerAs: 'vm'
       }).
       otherwise({
         redirectTo: '/totalisatorList'

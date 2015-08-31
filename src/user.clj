@@ -20,12 +20,12 @@
 
 
 (defn init []
-  (reset! c/db-configuration {:connection-uri "jdbc:h2:mem:test2;DB_CLOSE_DELAY=-1"})
+  ;(reset! c/db-configuration {:connection-uri "jdbc:h2:mem:test2;DB_CLOSE_DELAY=-1"})
   (migrate)
 
   (let [_ (println (us/get-users))
-        antanas-id (:id (us/login! {:name "Antanas"}))
-        other-user-id (:id (us/login! {:name "OtherGuy"}))
+        antanas-id (:id (us/save-user! {:username "Antanas" :password "clojure"}))
+        other-user-id (:id (us/save-user! {:username "OtherGuy" :password "test"}))
 
         eurobasked-id (:id (ts/save-totalisator! {:current-user-id antanas-id :description nil :created-by antanas-id :name "Eurobasket" :winner-count 1}))
 

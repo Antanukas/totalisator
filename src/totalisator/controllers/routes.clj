@@ -6,7 +6,9 @@
             [totalisator.service.totalisator-service :as ts]
             [totalisator.service.team-service :as tms]
             [totalisator.service.bet-service :as bets]
-            [totalisator.service.match-service :as ms]))
+            [totalisator.service.match-service :as ms]
+            [totalisator.service.auth-service :as asrv]
+            [cemerick.friend :as friend]))
 
 (defn- batch-response [requests func & args]
   (println "AAAAA" requests)
@@ -32,6 +34,9 @@
   (route/resources "/" {:root "public"})
   (route/not-found "Not Found"))
 
+(defroutes auth-routes
+  (POST "/authentication" [:as {authentication :body}] (resp/response (asrv/authenticate authentication))))
+
 ;TODO secure routes
 (defroutes api-routes
   ;Routes that can be managed with own user only
@@ -50,7 +55,7 @@
               [match-id :as {bets :body}] (batch-response bets bets/new-match-bet match-id)))))
 
   (GET "/users" [] (resp/response (us/get-users)))
-  (POST "/users" [:as {users :body}] (batch-response users us/login!))
+  ;(POST "/users" [:as {users :body}] (batch-response users us/login!))
   (GET "/users/:current-user-id/bets"
     [current-user-id] (resp/response (bets/get-team-bets current-user-id)))
   (GET "/totalisators" [] (resp/response (ts/get-totalisators)))

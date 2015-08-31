@@ -1,11 +1,11 @@
 -- name: get-users
-SELECT * FROM "users"
+SELECT id, username FROM "users"
 
 -- name: save-user<!
-INSERT INTO "users"(name) VALUES(:name)
+INSERT INTO "users"(username, password) VALUES(:username, :password)
 
 -- name: update-user<!
-UPDATE "users" SET name = :name WHERE id = :id
+UPDATE "users" SET username = :usernamename, password = :password WHERE id = :id
 
 -- name: get-user-by-name
-SELECT * from "users" where name = :name
+SELECT * from "users" where username = :username

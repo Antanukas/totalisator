@@ -5,7 +5,8 @@
             [totalisator.context.context :as ctx]))
 
 (defn jwt-token-workflow [req]
-  (if-let [token (get-in req [:headers @ctx/jwt-header])]
+  (println (:headers req))
+  (if-let [[_ token] (clojure.string/split (get-in req [:headers @ctx/jwt-header]) #" ")]
     (when (asrv/valid-token? token @ctx/jwt-secret)
       (let [decoded-token (asrv/decode-token token)]
         (when (not (asrv/expired-token? decoded-token))

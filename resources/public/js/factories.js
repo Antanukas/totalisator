@@ -10,8 +10,24 @@ factories.factory('HttpFactory', ['$http', function httpFactory($http) {
         return $http.post("api/users/1/totalisators", [totalisator]);
     },
 
-    signIn: function(username) {
-        return $http.post("api/users", [{name: username}]).then(function (response) {return response.data});
+    authenticate: function(username, password) {
+        return $http.post("authapi/authentication", {username: username, password: password})
+            .then(function (response) {return response.data});
     }
   };
+}]).factory('JwtInterceptor', ['$window', function jwtInterceptor($window) {
+  return {
+    request: function(config) {
+      var token = $window.localStorage['jwtToken'];
+      if(token) {
+        config.headers.Authorization = 'Bearer ' + token;
+      }
+
+      return config;
+    },
+
+    response: function(res) {
+        return res;
+    }
+  }
 }]);

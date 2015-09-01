@@ -1,14 +1,28 @@
 var controllers = angular.module('controllers', []);
 
-controllers.controller('IndexController', function ($rootScope, HttpFactory){
+controllers.controller('IndexController', function ($rootScope, $window, HttpFactory, $location){
   var vm = this;
 
-  vm.username = undefined;
-  vm.signIn = function() {
-    $rootScope.username = vm.username;
-    HttpFactory.signIn(vm.username).then(function (response) {
-      $rootScope.userId = response[0].id;
+  vm.username = $window.localStorage['username'];
+
+  vm.login = function() {
+    HttpFactory.authenticate(vm.username, vm.password).then(function (response) {
+      $window.localStorage['jwtToken'] = response.token;
+      $window.localStorage['username'] = vm.username; //Better would be to decode token
+      vm.isLoggedIn = true;
+      vm.password = null;
+      $location.path("/totalisatorList");
     });
+  };
+
+  vm.isLoggedIn = $window.localStorage['jwtToken'] && $window.localStorage['username'];
+
+  vm.logout = function() {
+    $window.localStorage.removeItem('jwtToken');
+    $window.localStorage.removeItem('username');
+    vm.username = undefined;
+    vm.isLoggedIn = false;
+    $location.path("/unauthenticated");
   };
 }).controller('TotalisatorsController', function (HttpFactory) {
 
@@ -62,4 +76,6 @@ controllers.controller('IndexController', function ($rootScope, HttpFactory){
   vm.hasMoneyInvested = function(team) {
     return team.moneyInvested && team.moneyInvested > 0;
   };
+}).config(function($httpProvider) {
+  $httpProvider.interceptors.push('JwtInterceptor');
 });

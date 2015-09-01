@@ -5,25 +5,38 @@ var totalisatorApp = angular.module('totalisatorApp', [
     "factories"
 ]);
 
-totalisatorApp.config(['$routeProvider',
-  function($routeProvider) {
-    $routeProvider.
-      when('/totalisatorList', {
-        templateUrl: 'partials/totalisator-list.html',
-        controller: 'TotalisatorsController',
-        controllerAs: 'vm'
-      }).
-      when('/newTotalisator', {
-        templateUrl: 'partials/new-totalisator.html',
-        controller: 'CreateTotalisatorController',
-        controllerAs: 'vm'
-      }).
-      when('/viewTotalisator', {
-        templateUrl: 'partials/view-totalisator.html',
-        controller: 'ViewTotalisatorController',
-        controllerAs: 'vm'
-      }).
-      otherwise({
-        redirectTo: '/totalisatorList'
-      });
-  }]);
+totalisatorApp.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.
+    when('/totalisatorList', {
+      templateUrl: 'partials/totalisator-list.html',
+      controller: 'TotalisatorsController',
+      controllerAs: 'vm'
+    }).
+    when('/newTotalisator', {
+      templateUrl: 'partials/new-totalisator.html',
+      controller: 'CreateTotalisatorController',
+      controllerAs: 'vm'
+    }).
+    when('/viewTotalisator', {
+      templateUrl: 'partials/view-totalisator.html',
+      controller: 'ViewTotalisatorController',
+      controllerAs: 'vm'
+    }).
+    when('/unauthenticated', {
+      templateUrl: 'partials/please-login.html'
+    }).
+    otherwise({
+      redirectTo: '/totalisatorList'
+    });
+}])
+.run(function($rootScope, $location, $window) {
+ $rootScope.$on( "$routeChangeStart", function(event, next, current) {
+   if (!$window.localStorage['jwtToken']) {
+     // no logged user, redirect to /login
+     if ( next.templateUrl === "partials/please-login.html") {
+     } else {
+       $location.path("/unauthenticated");
+     }
+   }
+ });
+});

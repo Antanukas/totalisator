@@ -15,9 +15,9 @@
 ;middleware for printlns
 (defn- printlner [handler]
   (fn [request]
-    (println request)
+    (println "Request" request)
     (let [resp (handler request)]
-      (println resp)
+      (println "Response: " resp)
       resp)))
 
 (defn- wrap-json-keys [handler]
@@ -32,13 +32,14 @@
     (middleware/wrap-json-body {:keywords? true :bigdecimals? true})
     (wrap-json-keys)
     (middleware/wrap-json-response)
-    ;(printlner)
     (wrap-defaults api-defaults)))
 
 (def app
   (core/routes
     (context "/api" []
       (-> routes/api-routes
+        (printlner)
+        (jwt/wrap-current-user-id-body)
         (friend/wrap-authorize #{:user})
         (jwt/wrap-authenticate)
         (wrap-api)))

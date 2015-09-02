@@ -15,7 +15,7 @@
     </div>
 
     <!-- Team totalistator -->
-    <div class="form-inline" ng-repeat="team in vm.totalisator.teams">
+    <div class="form-inline" ng-repeat="team in vm.teams">
         <label for="bet_{{$index}}" class="control-label col-xs-2">{{team.name}}</label>
 
         <div class="col-xs-10 row">
@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <div class="form-inline" ng-repeat="match in vm.totalisator.matches">
+    <div class="form-inline" ng-repeat="match in vm.matches">
         <label for="home-team" class="control-label col-xs-2">Team Match</label>
         <input type="text" class="form-control" id="home-team" placeholder="Home Team" ng-model="match.homeTeam" disabled/>
         <input type="text" class="form-control" id="home-team-score" placeholder="Home Team Points" ng-model="match.homeTeamScore"/>

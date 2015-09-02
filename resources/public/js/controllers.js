@@ -44,7 +44,7 @@ controllers.controller('IndexController', function ($rootScope, $window, HttpFac
 
   vm.addTeam = function(tag) {
     console.log(tag);
-    vm.teams.push(tag.text);
+    vm.teams.push({name: tag.text});
   };
 
   vm.addNewMatch = function() {
@@ -57,21 +57,28 @@ controllers.controller('IndexController', function ($rootScope, $window, HttpFac
   };
 
   vm.saveTotalisator = function() {
-    console.log("Saving " + JSON.stringify(vm.totalisator)); //TODO
-    HttpFactory.newTotalisator(vm.totalisator);
+    HttpFactory.newTotalisator(vm.totalisator).then(function (savedTotalisators) {
+      var savedTotalisatorId = savedTotalisators[0].id;
+      HttpFactory.newTotalisatorTeams(vm.teams, savedTotalisatorId);
+    });
   };
 
   vm.atLeastTwoTeamsExist = function() {
     return vm.teams.length > 1;
   };
-}).controller('ViewTotalisatorController', function ($scope) {
+}).controller('ViewTotalisatorController', function ($scope, $routeParams, HttpFactory) {
   var vm = this;
 
-  vm.totalisator = {
-    id: 1,
-    name: "Eurobasket 2015",
-    teams: [{name: "Zalgiris", odds: 1.5, moneyInvested: 25}, {name: "Rytas", odds: 2.5}]
-  }
+  vm.totalisator = {};
+  vm.teams = [];
+  var totalisatorId = $routeParams.totalisatorId;
+
+  HttpFactory.getTotalisator(totalisatorId).then(function(response){
+    vm.totalisator = response;
+  });
+  HttpFactory.getTotalisatorTeams(totalisatorId).then(function(response){
+    vm.teams = response;
+  });
 
   vm.hasMoneyInvested = function(team) {
     return team.moneyInvested && team.moneyInvested > 0;

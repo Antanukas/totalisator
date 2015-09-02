@@ -17,7 +17,7 @@ totalisatorApp.config(['$routeProvider', function($routeProvider) {
       controller: 'CreateTotalisatorController',
       controllerAs: 'vm'
     }).
-    when('/viewTotalisator', {
+    when('/viewTotalisator/:totalisatorId', {
       templateUrl: 'partials/view-totalisator.html',
       controller: 'ViewTotalisatorController',
       controllerAs: 'vm'

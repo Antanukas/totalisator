@@ -25,6 +25,10 @@ factories.factory('HttpFactory', ['$http', function httpFactory($http) {
 
     authenticate: function(username, password) {
         return $http.post("authapi/authentication", {username: username, password: password}).then(getData);
+    },
+
+    placeWinnerBet: function(totalisatorId, teamId, betAmount) {
+      return $http.post("/api/totalisators/" + totalisatorId + "/teams/" + teamId + "/bets", [{amount: betAmount}]).then(getData);
     }
   };
 

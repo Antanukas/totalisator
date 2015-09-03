@@ -19,10 +19,13 @@
         <label for="bet_{{$index}}" class="control-label col-xs-2">{{team.name}}</label>
 
         <div class="col-xs-10 row">
-            <span id="bet_{{$index}}" href="" class="btn btn-primary" ng-bind="team.odds"/>
-            <input type="text" class="form-control" id="description_{{$index}}" placeholder="How much you want to bet?" ng-model="team.betAmount">
-            <button id="place_bet_{{$index}}" class="btn btn-success" ng-click="vm.placeWinnerBet()" >Place Bet</button>
-            <label for="bet_{{$index}}" class="control-label" ng-show="vm.hasMoneyInvested(team)">Money invested: {{team.moneyInvested}}$</label>
+            <span id="bet_{{$index}}" href="" class="btn btn-primary" ng-bind="team.odds || 'Infinity' | number:2"/>
+            <input type="text" class="form-control" id="description_{{$index}}"
+                   placeholder="How much you want to bet?" ng-model="team.betAmount">
+            <button id="place_bet_{{$index}}" class="btn btn-success"
+                    ng-click="vm.placeWinnerBet(team)" >Place Bet</button>
+            <!--<label for="bet_{{$index}}" class="control-label" ng-show="vm.hasMoneyInvested(team)">
+                Money invested: {{team.moneyInvested}}$</label>-->
         </div>
     </div>
 

@@ -5,3 +5,9 @@ CREATE TABLE "users" (
 
 	CONSTRAINT USER_UNQ UNIQUE (username)
 );
+
+INSERT INTO "users" VALUES(1, 'Antanas', 'clojure');
+INSERT INTO "users" VALUES(2, 'Test1', 'test');
+INSERT INTO "users" VALUES(3, 'Test2', 'test');
+INSERT INTO "users" VALUES(4, 'Test3', 'test');
+INSERT INTO "users" VALUES(5, 'Test4', 'test');

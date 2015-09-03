@@ -73,16 +73,24 @@ controllers.controller('IndexController', function ($rootScope, $window, HttpFac
   vm.teams = [];
   var totalisatorId = $routeParams.totalisatorId;
 
-  HttpFactory.getTotalisator(totalisatorId).then(function(response){
-    vm.totalisator = response;
-  });
-  HttpFactory.getTotalisatorTeams(totalisatorId).then(function(response){
-    vm.teams = response;
-  });
+  function init() {
+    HttpFactory.getTotalisator(totalisatorId).then(function(response){
+      vm.totalisator = response;
+    });
+    HttpFactory.getTotalisatorTeams(totalisatorId).then(function(response){
+      vm.teams = response;
+    });
+  };
 
   vm.hasMoneyInvested = function(team) {
     return team.moneyInvested && team.moneyInvested > 0;
   };
+
+  vm.placeWinnerBet = function(team) {
+    HttpFactory.placeWinnerBet(vm.totalisator.id, team.id, team.betAmount)
+      .then(init);
+  };
+  init();
 }).config(function($httpProvider) {
   $httpProvider.interceptors.push('JwtInterceptor');
 });

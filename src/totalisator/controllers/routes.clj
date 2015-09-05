@@ -48,9 +48,9 @@
   (POST "/totalisators/:totalisator-id/matches"
         [totalisator-id :as {matches :body}] (batch-response matches ms/save-match! totalisator-id))
 
-  (GET "/totalisators/:totalisator-id/teams/:winner-team-id/leaderboards"
+  (GET "/totalisators/:totalisator-id/teams/:winner-team-id/payouts"
        [totalisator-id :<< c/as-int winner-team-id :<< c/as-int]
-       (resp/response (tms/get-leaderboard totalisator-id winner-team-id)))
+       (resp/response (tms/get-payouts totalisator-id winner-team-id)))
   (GET "/totalisators/:totalisator-id/teams"
        [totalisator-id] (resp/response (tms/get-teams totalisator-id)))
   (POST "/totalisators/:totalisator-id/teams"

@@ -29,6 +29,10 @@ factories.factory('HttpFactory', ['$http', function httpFactory($http) {
 
     placeWinnerBet: function(totalisatorId, teamId, betAmount) {
       return $http.post("/api/totalisators/" + totalisatorId + "/teams/" + teamId + "/bets", [{amount: betAmount}]).then(getData);
+    },
+
+    getTotalisatorPayouts: function(totalisatorId, teamId) {
+      return $http.get("/api/totalisators/" + totalisatorId + "/teams/" + teamId + "/payouts").then(getData);
     }
   };
 

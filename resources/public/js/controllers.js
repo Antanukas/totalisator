@@ -71,6 +71,9 @@ controllers.controller('IndexController', function ($rootScope, $window, HttpFac
 
   vm.totalisator = {};
   vm.teams = [];
+  vm.winnerTeam = {};
+  vm.totalisatorPayouts = [];
+
   var totalisatorId = $routeParams.totalisatorId;
 
   function init() {
@@ -90,6 +93,13 @@ controllers.controller('IndexController', function ($rootScope, $window, HttpFac
     HttpFactory.placeWinnerBet(vm.totalisator.id, team.id, team.betAmount)
       .then(init);
   };
+
+  vm.switchTotalisatorPayouts = function(team) {
+    vm.winnerTeam = team;
+    return HttpFactory.getTotalisatorPayouts(vm.totalisator.id, team.id)
+      .then(function (response) { vm.totalisatorPayouts = response});
+  };
+
   init();
 }).config(function($httpProvider) {
   $httpProvider.interceptors.push('JwtInterceptor');

@@ -4,13 +4,15 @@
             [cemerick.friend.workflows :refer [make-auth]]
             [totalisator.context.context :as ctx]))
 
+(defn- assoc-fn [key value]
+  (fn [m] (assoc m key value)))
+
 (defn- assoc-seq-or-map-fn [key value]
   (fn [m]
-    (let [assoc-userid-fn (fn [m] (assoc m key value))]
-      (cond
-        (seq? m) (->> m (filter map?) (map assoc-userid-fn))
-        (map? m) (assoc-userid-fn m)
-        :else m))))
+    (cond
+      (seq? m) (->> m (filter map?) (map (assoc-fn key value)))
+      (map? m) (assoc m key value)
+      :else m)))
 
 (defn wrap-current-user-id-body
   [handler & [{:keys [user-id-key-name] :or {user-id-key-name :current-user-id}}]]

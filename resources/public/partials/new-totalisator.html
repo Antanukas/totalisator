@@ -13,20 +13,20 @@
             <input type="text" class="form-control" id="description" placeholder="Description" ng-model="vm.totalisator.description">
         </div>
     </div>
-    <div class="form-group">
+    <!--<div class="form-group">
         <label for="winners" class="control-label col-xs-2">How many betors win?</label>
 
         <div class="col-xs-10">
             <input type="text" class="form-control" id="winners" placeholder="Winners" ng-model="vm.totalisator.winnerCount">
         </div>
-    </div>
+    </div>-->
     <div class="form-group">
         <label for="teams" class="control-label col-xs-2">Teams</label>
         <div class="col-xs-10">
             <tags-input ng-model="vm.teamsTags" on-tag-added="vm.addTeam($tag)"></tags-input>
         </div>
     </div>
-    <div class="form-inline" ng-repeat="match in vm.matches">
+    <!--<div class="form-inline" ng-repeat="match in vm.matches">
         <label class="control-label col-xs-2">Team Match</label>
         <div class="dropdown dropdown-scroll pull-left">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">{{match.homeTeam || 'Home team'}}<span class="caret"></span>
@@ -65,14 +65,14 @@
         </div>
         <input type="text" class="form-control" id="match-date" placeholder="Match Date ('YYYY-MM-dd HH:mm')" ng-model="match.matchDate"/>
         <a href="" ng-click="vm.removeMatch($index)" class="btn btn-primary">Remove</a>
-    </div>
+    </div>-->
 
 
-    <div class="form-group">
+<!--    <div class="form-group">
         <div class="col-xs-10">
             <a href="" ng-disabled="!vm.atLeastTwoTeamsExist()" ng-click="vm.atLeastTwoTeamsExist() && vm.addNewMatch()" class="btn btn-primary">Add match</a>
         </div>
-    </div>
+    </div>-->
     <div class="form-group">
         <div class="col-xs-10">
             <button type="submit" class="btn btn-primary" ng-click="vm.saveTotalisator()">Finish</button>

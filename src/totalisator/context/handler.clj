@@ -38,7 +38,7 @@
   (core/routes
     (context "/api" []
       (-> routes/api-routes
-        (printlner)
+        ;(printlner)
         (jwt/wrap-current-user-id-body)
         (friend/wrap-authorize #{:user})
         (jwt/wrap-authenticate)

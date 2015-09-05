@@ -8,8 +8,6 @@
 (defqueries "queries/totalisators.sql")
 (defqueries "queries/teams.sql")
 (defqueries "queries/winner_bets.sql")
-(defqueries "queries/match_bets.sql")
-(defqueries "queries/matches.sql")
 
 (defn- db-spec [] {:connection (:connection-uri @c/db-configuration)})
 (defn- ->kebab-case [map] (transform-keys ->kebab-case-keyword map))

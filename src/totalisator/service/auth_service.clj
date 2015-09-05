@@ -4,7 +4,8 @@
             [clj-jwt.intdate :refer [intdate->joda-time]]
             [clj-time.core :refer [after? now plus days]]
             [totalisator.repository.queries :as q]
-            [totalisator.context.context :as ctx]))
+            [totalisator.context.context :as ctx]
+            [schema.core :as s]))
 
 (defn encode-claims [token-claims secret]
   (-> token-claims jwt (sign :HS256 secret) to-str))
@@ -32,10 +33,13 @@
    :username username
    :user-id   id})
 
-(defn authenticate [authentication]
-  (if-let [existing-user (q/query-single q/get-user-by-name authentication)]
-    (if (= (:password existing-user) (:password authentication))
+(s/defschema Credentials {:username String :password String})
+(s/defschema Token {:token String})
+
+(s/defn ^:always-validate authenticate :- Token [credentials :- Credentials]
+  (if-let [existing-user (q/query-single q/get-user-by-name credentials)]
+    (if (= (:password existing-user) (:password credentials))
       {:token (encode-claims (new-claims existing-user) @ctx/jwt-secret)}
       (throw (ex-info "Invalid password" {:type :invalid-request-data})))
-    (throw (ex-info "User not found" {:type :data-not-found}))))                               ;proper exception handling
+    (throw (ex-info "User not found" {:type :data-not-found}))));proper exception handling
 

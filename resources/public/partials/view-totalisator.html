@@ -22,7 +22,7 @@
             <div class="form-inline">
                 <span id="bet_{{$index}}" href="" class="form-control btn btn-primary"
                       ng-bind="team.odds || 'Infinity' | number:2"/>
-                <input type="text" class="form-control" id="description_{{$index}}"
+                <input type="number" class="form-control" id="description_{{$index}}"
                        placeholder="How much you want to bet?" ng-model="team.betAmount">
                 <button id="place_bet_{{$index}}" class="btn btn-success"
                         ng-click="vm.placeWinnerBet(team)">Place Bet

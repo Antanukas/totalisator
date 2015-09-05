@@ -4,7 +4,7 @@
             [camel-snake-kebab.core :refer [->kebab-case-keyword ->snake_case_keyword]]
             [camel-snake-kebab.extras :refer [transform-keys]]))
 
-(defqueries "queries/users.sql" )
+(defqueries "queries/users.sql")
 (defqueries "queries/totalisators.sql")
 (defqueries "queries/teams.sql")
 (defqueries "queries/winner_bets.sql")

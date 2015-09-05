@@ -1,0 +1,6 @@
+(ns totalisator.controllers.bet-controller
+  (:require [totalisator.service.bet-service :as bets]
+            [totalisator.controllers.utils :as utl]))
+
+(defn create-bets [totalisator-id team-id bets]
+  (utl/batch-response bets bets/new-winner-bet totalisator-id team-id))

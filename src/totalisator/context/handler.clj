@@ -8,7 +8,8 @@
             [camel-snake-kebab.extras :refer [transform-keys]]
             [totalisator.controllers.routes :as routes]
             [totalisator.context.jwt-workflow :as jwt]
-            [cemerick.friend :as friend]))
+            [cemerick.friend :as friend]
+            [totalisator.service.exceptions :as ex]))
 
 
 
@@ -27,6 +28,7 @@
 
 (defn wrap-api [routes]
   (-> routes
+    (ex/wrap-exception-handling)
     (wrap-keyword-params)
     (wrap-params)
     (middleware/wrap-json-body {:keywords? true :bigdecimals? true})

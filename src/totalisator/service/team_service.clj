@@ -53,13 +53,12 @@
     (let [teams (q/query q/get-teams {:totalisator-id totalisator-id})
           odds-per-team (get-odds-per-team (get-winner-bets totalisator-id))
           assoc-odds-fn (fn [m odds] (if odds (assoc m :odds odds) m))]
-      (map #(assoc-odds % (get odds-per-team (:id %))) teams))))
+      (map #(assoc-odds-fn % (get odds-per-team (:id %))) teams))))
 
 (s/defn ^:always-validate get-payouts :- [Payout]
   [totalisator-id :- s/Int winner-team-id :- s/Int]
   (with-precision 10
     (let [winner-bets (get-winner-bets totalisator-id)
-          bets-per-user (partition-by :username winner-bets)
           winner-odds (get (get-odds-per-team winner-bets) winner-team-id)
 
           ->payout (fn [winner-team-id odds user-bets]
@@ -74,5 +73,6 @@
                         :invested-amount           invested-amount
                         :profit                    (- payout invested-amount)}))
 
+          bets-per-user (vals (group-by :username winner-bets))
           payouts (map (partial ->payout winner-team-id winner-odds) bets-per-user)]
       (reverse (sort-by :payout payouts)))))

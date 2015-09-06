@@ -33,7 +33,7 @@
     (tmctrl/get-payouts totalisator-id winner-team-id))
   (GET "/totalisators/:totalisator-id/teams" [totalisator-id :<< c/as-int] (tmctrl/get-teams totalisator-id))
   (POST "/totalisators/:totalisator-id/teams"
-        [totalisator-id :<< c/as-int :as {teams :body}] (tmctrl/save-teams teams  totalisator-id)))
+        [totalisator-id :<< c/as-int :as {teams :body}] (tmctrl/save-teams totalisator-id teams)))
 
 (defroutes api-routes
   totalisator-resource

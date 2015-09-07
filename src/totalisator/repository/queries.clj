@@ -38,3 +38,29 @@
   (if (:id data)
     (update<! update-fn data)
     (insert<! insert-fn data)))
+
+
+(comment
+  (select-columns [{:team-id 1 :name "john" :other-table-column "s"}] [:team-id :name] :team-id)
+  :=> ({:name "john", :id 1}))
+(defn select-columns [map-coll columns id-column-name]
+  "Given collection of maps selects only specified columns. Specified id-column-name is renmaed to ID"
+  (->> map-coll
+    (map #(select-keys % columns))
+    (map #(clojure.set/rename-keys % {id-column-name :id}))))
+
+(comment
+  (join [{:id 1 :name "parent1"} {:id 2 :name "parent2"}] [{:id 1 :parent-id 2} {:id 2 :parent-id 1}] :childs :parent-id)
+  :=> ({:id 1, :name "parent1", :childs [{:id 2, :parent-id 1}]} {:id 2, :name "parent2", :childs [{:id 1, :parent-id 2}]}))
+(defn join [parent-coll child-coll parent-column join-column]
+  "Given to collections of tables joins them using join column. Parent will contain collection under parent-column key"
+  (let [grouped-childs (group-by join-column child-coll)]
+    (map #(assoc % parent-column (get grouped-childs (:id %) [])) parent-coll)))
+
+;Business queries
+(defn get-teams-with-bets [totalistator-id]
+  (let [team-bet-table (query get-teams-with-bets-raw {:totalisator-id totalistator-id})
+        bets (select-columns team-bet-table [:bet-id :betor-id :totalisator-team-id :amount :username] :bet-id)
+        teams (distinct (select-columns team-bet-table [:team-id :name :totalisator-id :created-by] :team-id))
+        teams-with-bets (join teams bets :bets :totalisator-team-id)]
+    teams-with-bets))

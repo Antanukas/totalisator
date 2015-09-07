@@ -7,3 +7,5 @@ CREATE TABLE "totalisators" (
 	CONSTRAINT TOTALISATOR_UNQ UNIQUE (name),
 	CONSTRAINT totalisator_user_fk FOREIGN KEY(created_by) REFERENCES "users"(id) ON DELETE RESTRICT
 );
+
+INSERT INTO "totalisators" VALUES(1, 1, 'Baltic Basket 2015', 'Basketball championship for Baltic countries');

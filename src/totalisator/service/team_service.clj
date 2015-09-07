@@ -3,28 +3,27 @@
             [schema.core :as s])
   (:import (java.math RoundingMode)))
 
-(defn- map-values [f m]
-  "Applies f to each value in the map and returns new map"
-  (into {} (for [[k v] m] [k (f v)])))
-
 (defn- round-money [money]
   (.setScale (bigdec money) 2 RoundingMode/HALF_DOWN))
 
-(defn- odds-fn [money-pool]
-  (fn [runner-money] (/ money-pool runner-money)))
+(defn- odds [money-pool waggered]
+  (with-precision 10
+    (if (> waggered 0)
+      (/ money-pool waggered)
+      0)))
 
 (defn- sum-bet-amounts [bets]
   (reduce + (map :amount bets)))
 
-(defn- get-odds-per-team [winner-bets]
-  (let [team-bets (group-by :totalisator-team-id winner-bets)
-        wagered-per-team (map-values sum-bet-amounts team-bets)
-        total-money-pool (sum-bet-amounts winner-bets)
-        odds-per-team (map-values (odds-fn total-money-pool) wagered-per-team)]
-    odds-per-team))
+(defn- calculate-team-odds [money-pool team]
+  (odds money-pool (sum-bet-amounts (:bets team))))
 
-(defn- get-winner-bets [totalisator-id]
-  (q/query q/get-winner-bets-by-totalisator-id {:totalisator-id totalisator-id}))
+(defn- all-winner-bets [teams]
+  (flatten (map :bets teams)))
+
+(defn- calculate-odds [teams]
+  (let [money-pool (sum-bet-amounts (all-winner-bets teams))]
+    (map #(assoc % :odds (calculate-team-odds money-pool %)) teams)))
 
 ; Public functions
 
@@ -48,31 +47,38 @@
       (clojure.set/rename-keys {:current-user-id :created-by})
       (assoc :totalisator-id totalisator-id))))
 
+(defn ->team [team]
+  (select-keys team [:id :name :totalisator-id :created-by :odds]))
+
 (s/defn ^:always-validate get-teams :- Teams [totalisator-id :- s/Int]
-  (with-precision 10
-    (let [teams (q/query q/get-teams {:totalisator-id totalisator-id})
-          odds-per-team (get-odds-per-team (get-winner-bets totalisator-id))
-          assoc-odds-fn (fn [m odds] (if odds (assoc m :odds odds) m))]
-      (map #(assoc-odds-fn % (get odds-per-team (:id %))) teams))))
+  (map ->team (calculate-odds (q/get-teams-with-bets totalisator-id))))
+
+(defn- calculate-payout [odds invested-amount invested-on-winner]
+  (println odds)
+  (round-money
+    (if (= 0M (bigdec odds))
+      invested-amount
+      (* odds invested-on-winner))))
 
 (s/defn ^:always-validate get-payouts :- [Payout]
   [totalisator-id :- s/Int winner-team-id :- s/Int]
   (with-precision 10
-    (let [winner-bets (get-winner-bets totalisator-id)
-          winner-odds (get (get-odds-per-team winner-bets) winner-team-id)
+    (let [teams (calculate-odds (q/get-teams-with-bets totalisator-id))
+          winner-team (first (filter #(= (:id %) winner-team-id) teams))
+          bets-per-user (vals (group-by :username (all-winner-bets teams)))
 
-          ->payout (fn [winner-team-id odds user-bets]
+          ->user-payout (fn [winner-team user-bets]
                      (let [username (:username (first user-bets))
                            invested-amount (sum-bet-amounts user-bets)
-                           bets-on-winner (filter #(= (:totalisator-team-id %) winner-team-id) user-bets)
+                           bets-on-winner (filter #(= (:totalisator-team-id %) (:id winner-team)) user-bets)
                            invested-on-winner (sum-bet-amounts bets-on-winner)
-                           payout (round-money (* odds invested-on-winner))]
+                           payout (calculate-payout (:odds winner-team) invested-amount invested-on-winner)]
                        {:username                  username
                         :payout                    payout
                         :invested-amount-on-winner invested-on-winner
                         :invested-amount           invested-amount
                         :profit                    (- payout invested-amount)}))
 
-          bets-per-user (vals (group-by :username winner-bets))
-          payouts (map (partial ->payout winner-team-id winner-odds) bets-per-user)]
+
+          payouts (map (partial ->user-payout winner-team) bets-per-user)]
       (reverse (sort-by :payout payouts)))))

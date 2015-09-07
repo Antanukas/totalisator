@@ -2,7 +2,8 @@
   (:require [yesql.core :refer [defqueries]]
             [totalisator.context.context :as c]
             [camel-snake-kebab.core :refer [->kebab-case-keyword ->snake_case_keyword]]
-            [camel-snake-kebab.extras :refer [transform-keys]]))
+            [camel-snake-kebab.extras :refer [transform-keys]]
+            [schema.core :as s]))
 
 (defqueries "queries/users.sql")
 (defqueries "queries/totalisators.sql")
@@ -58,7 +59,15 @@
     (map #(assoc % parent-column (get grouped-childs (:id %) [])) parent-coll)))
 
 ;Business queries
-(defn get-teams-with-bets [totalistator-id]
+(s/defschema Team-With-Bets
+  {:id s/Int
+   :name String
+   :totalisator-id s/Int
+   :created-by s/Int
+   :bets [{:id s/Int :betor-id s/Int :totalisator-team-id s/Int :amount s/Num :username String}]})
+
+(s/defn ^:always-validate get-teams-with-bets :- [Team-With-Bets]
+  [totalistator-id :- s/Num]
   (let [team-bet-table (query get-teams-with-bets-raw {:totalisator-id totalistator-id})
         bets (select-columns team-bet-table [:bet-id :betor-id :totalisator-team-id :amount :username] :bet-id)
         teams (distinct (select-columns team-bet-table [:team-id :name :totalisator-id :created-by] :team-id))

@@ -4,5 +4,4 @@
             [schema.core :as s]))
 
 (defn create-bets [totalisator-id team-id bets]
-  (println (class (:amount (first bets))))
   (utl/batch-response bets bets/new-winner-bet totalisator-id team-id))

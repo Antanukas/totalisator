@@ -5,7 +5,8 @@
             [clj-time.core :refer [after? now plus days]]
             [totalisator.repository.queries :as q]
             [totalisator.context.context :as ctx]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [totalisator.service.exceptions :as ex]))
 
 (defn encode-claims [token-claims secret]
   (-> token-claims jwt (sign :HS256 secret) to-str))
@@ -22,8 +23,8 @@
   (try
     (-> encoded-token str->jwt (verify secret))
     (catch Exception e
-      (println "Can't parse given token")
       (.printStackTrace e)
+      (ex/throw-unauthorized "Corrupted token passed")
       false)))
 
 (defn new-claims [& [{:keys [username id]}]]
@@ -36,10 +37,11 @@
 (s/defschema Credentials {:username String :password String})
 (s/defschema Token {:token String})
 
-(s/defn ^:always-validate authenticate :- Token [credentials :- Credentials]
+(s/defn ^:always-validate authenticate :- Token
+  [credentials :- Credentials]
   (if-let [existing-user (q/query-single q/get-user-by-name credentials)]
     (if (= (:password existing-user) (:password credentials))
       {:token (encode-claims (new-claims existing-user) @ctx/jwt-secret)}
-      (throw (ex-info "Invalid password" {:type :invalid-request-data})))
-    (throw (ex-info "User not found" {:type :data-not-found}))));proper exception handling
+      (ex/throw-unauthorized "Invalid password"))
+    (ex/throw-data-not-found "User not found" )))
 

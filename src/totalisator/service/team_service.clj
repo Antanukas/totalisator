@@ -41,7 +41,8 @@
    :invested-amount s/Num
    :profit s/Num})
 
-(s/defn ^:always-validate save-team! :- Team [team :- New-Team totalisator-id :- s/Int]
+(s/defn ^:always-validate save-team! :- Team
+  [team :- New-Team totalisator-id :- s/Int]
   (q/insert-or-update! q/save-team<! q/update-team!
     (-> team
       (clojure.set/rename-keys {:current-user-id :created-by})
@@ -50,11 +51,11 @@
 (defn ->team [team]
   (select-keys team [:id :name :totalisator-id :created-by :odds]))
 
-(s/defn ^:always-validate get-teams :- Teams [totalisator-id :- s/Int]
+(s/defn ^:always-validate get-teams :- Teams
+  [totalisator-id :- s/Int]
   (map ->team (calculate-odds (q/get-teams-with-bets totalisator-id))))
 
 (defn- calculate-payout [odds invested-amount invested-on-winner]
-  (println odds)
   (round-money
     (if (= 0M (bigdec odds))
       invested-amount

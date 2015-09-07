@@ -16,9 +16,12 @@
         (let [{:keys [type message]} (ex-data e)]
           (case type
             :data-not-found (json-response 404 message)
-            :invalid-data (json-response 400 message)
+            :unauthorized (json-response 401 message)
             (throw e)))))))
 
 
 (defn throw-data-not-found [msg]
   (throw-ex msg :data-not-found))
+
+(defn throw-unauthorized [msg]
+  (throw-ex msg :unauthorized))

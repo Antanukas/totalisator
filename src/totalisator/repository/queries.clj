@@ -49,9 +49,7 @@
 ;Hints select-keys, clojure.set/rename-keys
 (defn select-columns [map-coll columns id-column-name]
   "Given collection of maps selects only specified columns. Specified id-column-name is renmaed to ID"
-  (->> map-coll
-    (map #(select-keys % columns))
-    (map #(clojure.set/rename-keys % {id-column-name :id}))))
+  nil)
 
 (comment
   (join [{:id 1 :name "parent1"} {:id 2 :name "parent2"}] [{:id 1 :parent-id 2} {:id 2 :parent-id 1}] :childs :parent-id)
@@ -59,8 +57,7 @@
 ;Hints group-by, assoc, get, (:keyword map) => value of :keyword in map
 (defn join [parent-coll child-coll parent-column join-column]
   "Given to collections of tables joins them using join column. Parent will contain collection under parent-column key"
-  (let [grouped-childs (group-by join-column child-coll)]
-    (map #(assoc % parent-column (get grouped-childs (:id %) [])) parent-coll)))
+  nil)
 
 (s/defschema Team-With-Bets
   {:id s/Int
@@ -69,12 +66,14 @@
    :created-by s/Int
    :bets [{:id s/Int :betor-id s/Int :totalisator-team-id s/Int :amount s/Num :username String}]})
 
+;bet columns [:bet-id :betor-id :totalisator-team-id :amount :username]
+;team columns [:team-id :name :totalisator-id :created-by] :team-id)
 ;Implement using select-columns and join
 ;Switch to namespace using (use 'totalisator.repository.queries)
 (s/defn ^:always-validate get-teams-with-bets :- [Team-With-Bets]
   [totalistator-id :- s/Num]
   (let [team-bet-table (query get-teams-with-bets-raw {:totalisator-id totalistator-id})
-        bets (select-columns team-bet-table [:bet-id :betor-id :totalisator-team-id :amount :username] :bet-id)
-        teams (distinct (select-columns team-bet-table [:team-id :name :totalisator-id :created-by] :team-id))
-        teams-with-bets (join teams bets :bets :totalisator-team-id)]
+        bets nil
+        teams nil
+        teams-with-bets nil]
     teams-with-bets))

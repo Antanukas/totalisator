@@ -19,26 +19,31 @@
 ;(sum-bet-amounts [{:amount 2} {:amount 4}]) => 6
 (defn sum-bet-amounts [bets]
   "Given bets containing :amount keys sums them up"
-  nil)
+  "sum amount for all bets")
 
 ;Using above functions calculate odds for given team
 ;You need to sum up all team bet amounts and caclucate odds based on formula
+;Fn odds knows that formula
 ;(calculate-team-odds 30 {:id 1 :bets [{:amount 5.0} {:amount 15}]})
 ; => 1.5
 (defn calculate-team-odds [money-pool team]
-  nil)
+  "calculate odds for single team")
 
 ;you should collect all :bets from each team
+;all-winner-bets [{:bets ["a" "b" "c"]} {:bets ["d" "e" "f"] }]) => ("a" "b" "c" "d" "e" "f")
 (defn all-winner-bets [teams]
   "Given a list of teams produces list of all bets from all teams"
-  nil)
+  "flatten team bets")
 
 ;You should calculate money pool - amount of all bet money
 ;Then for each team you should calculate odds for that team and save them in :odds key
+;(map :odds (calculate-odds (q/get-teams-with-bets 1)))
+;=> (3.741176471M 3.419354839M 2.271428571M)
+
 (defn calculate-odds [teams]
   "Calculates odds for all teams and places them under :odds key"
-  (let [money-pool "calculate money pool"]
-    "cacluate odds per team and assoc them into :odds"))
+  (let [money-pool "calcualte money pool"]
+    "Produce teams with :odds key"))
 
 ;Schema for result of get-teams function
 (s/defschema Team {:id s/Int

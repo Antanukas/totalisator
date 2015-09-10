@@ -2,9 +2,9 @@
   :description "Simple Totalisator webapp for Basketball events"
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.7.0"]
-                 [compojure "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
                  [ring/ring-json "0.4.0"]
+                 [compojure "1.4.0"]
                  [prismatic/schema "1.0.1"]
 
                  [com.h2database/h2 "1.4.188"]

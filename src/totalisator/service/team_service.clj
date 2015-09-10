@@ -19,25 +19,26 @@
 ;(sum-bet-amounts [{:amount 2} {:amount 4}]) => 6
 (defn sum-bet-amounts [bets]
   "Given bets containing :amount keys sums them up"
-  (reduce + (map :amount bets)))
+  nil)
 
 ;Using above functions calculate odds for given team
 ;You need to sum up all team bet amounts and caclucate odds based on formula
 ;(calculate-team-odds 30 {:id 1 :bets [{:amount 5.0} {:amount 15}]})
 ; => 1.5
 (defn calculate-team-odds [money-pool team]
-  (odds money-pool (sum-bet-amounts (:bets team))))
+  nil)
 
+;you should collect all :bets from each team
 (defn all-winner-bets [teams]
   "Given a list of teams produces list of all bets from all teams"
-  (flatten (map :bets teams)))
+  nil)
 
 ;You should calculate money pool - amount of all bet money
 ;Then for each team you should calculate odds for that team and save them in :odds key
 (defn calculate-odds [teams]
   "Calculates odds for all teams and places them under :odds key"
-  (let [money-pool (sum-bet-amounts (all-winner-bets teams))]
-    (map #(assoc % :odds (calculate-team-odds money-pool %)) teams)))
+  (let [money-pool "calculate money pool"]
+    "cacluate odds per team and assoc them into :odds"))
 
 ;Schema for result of get-teams function
 (s/defschema Team {:id s/Int
@@ -54,7 +55,7 @@
 ;Result should be sequence of Team maps. Remember q/get-teams-with-bets?
 (s/defn ^:always-validate get-teams :- [Team]
   [totalisator-id :- s/Int]
-  (map ->team (calculate-odds (q/get-teams-with-bets totalisator-id))))
+  "hi")
 
 (s/defschema Payout
   {:username String
